@@ -5,11 +5,15 @@ CONFIG -= qt
 
 LIBS += -larmadillo -lfftw3
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    examples/example_tb.cpp \
+    examples/torou.cpp
 
 HEADERS += \
     exactdiagg/hamsolver.h \
     exactdiagg/qoperator.h \
     exactdiagg/fockbasis.h \
     exactdiagg/symmetrygroup.h \
-    exactdiagg/all.h
+    exactdiagg/all.h \
+    examples/example_tb.h \
+    examples/torou.h
