@@ -18,4 +18,5 @@ HEADERS += \
     examples/all.h
 
 DISTFILES += \
-    examples/plot_toro.gnuplot
+    examples/plot_hubbard.gnuplot \
+    README.md
