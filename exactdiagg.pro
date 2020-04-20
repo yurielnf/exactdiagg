@@ -7,7 +7,7 @@ LIBS += -larmadillo -lfftw3
 
 SOURCES += main.cpp \
     examples/example_tb.cpp \
-    examples/torou.cpp
+    examples/example_hubbard.cpp
 
 HEADERS += \
     exactdiagg/hamsolver.h \
@@ -15,8 +15,7 @@ HEADERS += \
     exactdiagg/fockbasis.h \
     exactdiagg/symmetrygroup.h \
     exactdiagg/all.h \
-    examples/example_tb.h \
-    examples/torou.h
+    examples/all.h
 
 DISTFILES += \
     examples/plot_toro.gnuplot
