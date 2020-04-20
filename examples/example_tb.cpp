@@ -45,6 +45,7 @@ void TestHamiltonianTB()
 
     auto b=FockBasisFixedChargeG<L>(nPart,G,0);
     auto gs=FindGS<L>(ham,b,G,nPart);
+    b.SetSym(G,1);
     for(int nu=1;nu<G.nSym();nu++,b.SetSym(G,nu))
     {
         auto gsn=FindGS<L>(ham,b,G,nPart);

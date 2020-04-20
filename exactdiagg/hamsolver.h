@@ -62,11 +62,11 @@ bool operator<(const EigenStateG<scalar>& e1,const EigenStateG<scalar>& e2)
 
 using EigenState=EigenStateG<>;
 
-template<int L>
-EigenState FindGS(QOperator ham,FockBasisFixedChargeG<L>& b,
+template<int L,class T>
+EigenState FindGS(QOperatorG<T> ham,FockBasisFixedChargeG<L>& b,
                   const SymmetryGroup<L,double>& G, int nPart)
 {
-    auto H=ham.toMatrix<L>(b,G);
+    auto H=ham.template toMatrix<L>(b,G);
 
     vec eval;
     mat evec;
@@ -80,12 +80,12 @@ EigenState FindGS(QOperator ham,FockBasisFixedChargeG<L>& b,
 }
 
 
-template<int L,class T>
-EigenStateG<cmpx> FindGS(QOperatorG<T> ham,FockBasisFixedChargeG<L>& b,
+template<int L>
+EigenStateG<cmpx> FindGS(QOperator ham,FockBasisFixedChargeG<L>& b,
                   const SymmetryGroup<L,cmpx>& G, int nPart)
 {
 //        b.SetSym(G,sym);
-    auto H=ham.template toMatrix<L,cmpx>(b,G);
+    auto H=ham.toMatrix<L,cmpx>(b,G);
 
     cx_vec evalz;
     cx_mat evec;
@@ -113,17 +113,17 @@ struct TimeEvolucion
     {
         eig_sym(eval,evec,cx_mat(H));
         for(uint n=0;n<eval.size();n++)
-            psi0_n[n]=dot(evec.col(n),psi0);
+            psi0_n[n]=cdot(evec.col(n),psi0);
     }
     cx_vec EvolveTo(double t) const
     {
-        cx_vec gt(eval.size(),fill::zeros);
+        cx_vec gt(eval.size());
         for(uint n=0;n<eval.size();n++)
         {
             cmpx q={0,-eval[n]*t};
-            gt+=evec.col(n)*( psi0_n[n]*exp(q) );
+            gt(n)=psi0_n[n]*exp(q);
         }
-        return gt;
+        return evec*gt;
     }
 };
 

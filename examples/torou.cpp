@@ -36,7 +36,7 @@ SymmetryGroup<Lt,cmpx> HubbardGroup()
     auto Trasl=TensorPow<L,2>( T1 );
     auto Gt=CyclicGroupPow<Lt>(Trasl, L);
 
-    auto G=Gt;//.DirectProd(Geh).DirectProd(Gr).DirectProd(Gsf);
+    auto G=Gt.DirectProd(Geh).DirectProd(Gr).DirectProd(Gsf);
     return G;
 }
 
@@ -66,7 +66,8 @@ void TestHubbardBasic(double U)
     auto b=FockBasisFixedChargeG<Lt>(nPart,G,0,HasSz<Lt>{0});
 
     auto gs=FindGS<Lt>(H,b,G,nPart);
-    for(int nu=1;nu<G.nSym();nu++,b.SetSym(G,nu))
+    b.SetSym(G,1);
+    for(int nu=1;nu<2/*G.nSym()*/;nu++,b.SetSym(G,nu))
     {
         auto gsn=FindGS<Lt>(H,b,G,nPart);
         gs=std::min( gs, gsn );

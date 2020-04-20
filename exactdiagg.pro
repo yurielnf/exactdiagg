@@ -17,3 +17,6 @@ HEADERS += \
     exactdiagg/all.h \
     examples/example_tb.h \
     examples/torou.h
+
+DISTFILES += \
+    examples/plot_toro.gnuplot
