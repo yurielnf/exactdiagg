@@ -1,4 +1,3 @@
-#include "example_tb.h"
 #include"exactdiagg/all.h"
 
 #define NQUBIT_TB 8

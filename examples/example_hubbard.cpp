@@ -2,11 +2,11 @@
 #include"exactdiagg/all.h"
 #include<string>
 
-#define NQUBIT_TORO 20
+#define NQUBIT_HUBBARD 20
 
 using namespace std;
 
-QOperator HamHubbard(int L,double U,bool periodic=false)
+QOperator HubbardHam(int L,double U,bool periodic=false)
 {
     QOperator H;
     for(int i=0;i<L-1+periodic;i++)
@@ -57,11 +57,11 @@ struct HasSz
 
 void TestHubbardBasic(double U)
 {
-    const int Lt=NQUBIT_TORO;
+    const int Lt=NQUBIT_HUBBARD;
     const int L=Lt/2;
     int nPart=L;
 
-    auto H=HamHubbard(L,U,true);
+    auto H=HubbardHam(L,U,true);
     auto G=HubbardGroup<Lt>();
     auto b=FockBasisFixedChargeG<Lt>(nPart,G,0,HasSz<Lt>{0});
 
@@ -87,15 +87,15 @@ void TestHubbardQuench(double U1, double U2,double dt, int nt)
     if (!ok) throw invalid_argument("TestHubbardQuench: gs not found");
     cout<<"\nGS: nPart="<<gs.nPart<<" sym="<<gs.sym<<" ener="<<gs.ener<<endl;
 
-    const int Lt=NQUBIT_TORO;
+    const int Lt=NQUBIT_HUBBARD;
     const int L=Lt/2;
     int nPart=L;
 
-    auto ham=HamHubbard(L,U2,true);
+    auto ham=HubbardHam(L,U2,true);
     auto G=HubbardGroup<Lt>();
     auto b=FockBasisFixedChargeG<Lt>(nPart,G,gs.sym,HasSz<Lt>{0});
     auto H=ham.toMatrix(b,G,b);
-    auto sol=TimeEvolucion(H,gs.state);
+    auto sol=TimeEvolution(H,gs.state);
 
     // operadores a medir
     QOperator O=Create(0)*Destroy(0)*Create(L)*Destroy(L); //doble ocupacion

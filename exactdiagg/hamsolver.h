@@ -103,12 +103,12 @@ EigenStateG<cmpx> FindGS(QOperator ham,FockBasisFixedChargeG<L>& b,
 //----------------------------------------- Time evolution---------------------
 
 
-struct TimeEvolucion
+struct TimeEvolution
 {
     cx_mat evec;
     vec eval;
     cx_vec psi0_n; //to calculate <n|psi0>
-    TimeEvolucion(const sp_cx_mat &H, const cx_vec &psi0)
+    TimeEvolution(const sp_cx_mat &H, const cx_vec &psi0)
         :psi0_n(psi0.size())
     {
         eig_sym(eval,evec,cx_mat(H));
