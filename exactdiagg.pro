@@ -7,7 +7,8 @@ LIBS += -larmadillo -lfftw3
 
 SOURCES += main.cpp \
     examples/example_tb.cpp \
-    examples/example_hubbard.cpp
+    examples/example_hubbard.cpp \
+    examples/example_hubbard2.cpp
 
 HEADERS += \
     exactdiagg/hamsolver.h \

@@ -37,12 +37,13 @@ void TestHamiltonianTB()
     auto T1=TranslationOp<L>(1);
     auto Gt=CyclicGroupPow<L>(T1, L);
 
-    auto G=Gr.DirectProd(Geh);
-//    auto G=Gt;
+//    auto G=Gr.DirectProd(Geh);
+    auto G=Gt;
 
     auto ham=HamiltonianTB(L,true);
 
     auto b=FockBasisFixedChargeG<L>(nPart,G,0);
+    b.Print();
     auto gs=FindGS<L>(ham,b,G,nPart);
     b.SetSym(G,1);
     for(int nu=1;nu<G.nSym();nu++,b.SetSym(G,nu))
@@ -51,5 +52,7 @@ void TestHamiltonianTB()
         gs=std::min( gs, gsn );
     }
     cout<<"GS: nPart="<<gs.nPart<<" sym="<<gs.sym<<" ener="<<gs.ener<<endl;
+    b.SetSym(G,gs.sym);
+    gs.Print(b);
     cout<<"exac="<<ExactEnergyTB(L,nPart)<<endl;
 }

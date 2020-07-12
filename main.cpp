@@ -24,5 +24,11 @@ int main(int argc,const char *argv[])
         int nt=atoi(argv[6]);
         TestHubbardQuench(U1,U2,dt,nt);
     }
+    else if (argc==4 && string(argv[1])=="hubbard2")
+    {// ./a.out hubbard basic U tp
+        double U=atof(argv[2]);
+        double tp=atof(argv[3]);
+        TestHubbard2Basic(U,tp);
+    }
     return 0;
 }
