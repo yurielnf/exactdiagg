@@ -48,9 +48,13 @@ struct EigenStateG
     template<int L>
     void Print(const FockBasis<L> &b,double tol=1e-3) const
     {
+        uvec id=sort_index(abs(state),"descend");
         for(size_t i=0;i<state.size();i++)
-            if(fabs(state(i))>tol)
-                cout<<b.vec[i]<<" "<<state(i)<<endl;
+            if(fabs(state(id(i)))>tol)
+            {
+                auto p=id(i);
+                cout<<b.vec[p]<<" "<< abs(state(p))<<" "<<state(p)<<endl;
+            }
     }
 };
 
@@ -98,6 +102,25 @@ EigenStateG<cmpx> FindGS(QOperator ham,FockBasisFixedChargeG<L>& b,
     cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
     return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
 }
+
+
+template<int L>
+EigenState FindGS(QOperator ham,FockBasisFixedCharge<L>& b,int nPart)
+{
+    auto H=ham.toMatrix<L>(b);
+
+    vec eval;
+    mat evec;
+    eigs_sym(eval,evec,H ,std::min(b.Size()-2,100),"sa");
+    uvec ind = sort_index(eval);
+    for(uint i=0;i<eval.size();i++)
+        if (eval(i)-eval(ind(0))<1e-10)
+            cout<<eval[i]<<"\n";
+    cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
+    return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
+}
+
+
 
 
 //----------------------------------------- Time evolution---------------------

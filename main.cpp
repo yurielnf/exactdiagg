@@ -25,10 +25,17 @@ int main(int argc,const char *argv[])
         TestHubbardQuench(U1,U2,dt,nt);
     }
     else if (argc==4 && string(argv[1])=="hubbard2")
-    {// ./a.out hubbard basic U tp
+    {// ./a.out hubbard2 U tp
         double U=atof(argv[2]);
         double tp=atof(argv[3]);
         TestHubbard2Basic(U,tp);
+    }
+    else if (argc==5 && string(argv[1])=="hubbard2v")
+    {// ./a.out hubbard2v U V tp
+        double U=atof(argv[2]);
+        double V=atof(argv[3]);
+        double tp=atof(argv[4]);
+        TestHubbard2V(U,V,tp);
     }
     return 0;
 }

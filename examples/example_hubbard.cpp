@@ -78,6 +78,7 @@ void TestHubbardBasic(double U)
     auto ndv=cdot(gs.state,  nd.toMatrix(b,G,b) * gs.state);
     cout<<"\n"<<U<<" "<<real(ndv)<<" "<<gs.ener<<endl;
     gs.Save(string("gsU")+to_string(U)+".dat");
+    gs.Print(b);
 }
 
 void TestHubbardQuench(double U1, double U2,double dt, int nt)
