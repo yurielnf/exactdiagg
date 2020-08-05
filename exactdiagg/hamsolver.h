@@ -53,7 +53,7 @@ struct EigenStateG
             if(fabs(state(id(i)))>tol)
             {
                 auto p=id(i);
-                cout<<b.vec[p]<<" "<< abs(state(p))<<" "<<state(p)<<endl;
+                cout<<b.vec[p]<<" "<< fabs(state(p))<<" "<<state(p)<<endl;
             }
     }
 };
@@ -74,7 +74,10 @@ EigenState FindGS(QOperatorG<T> ham,FockBasisFixedChargeG<L>& b,
 
     vec eval;
     mat evec;
-    eigs_sym(eval,evec,H ,std::min(b.Size()-2,L*2),"sa");
+    if (b.Size()>10)
+        eigs_sym(eval,evec,H ,std::min(b.Size()-2,101),"sa");
+    else
+        eig_sym(eval,evec,Mat<T>(H));
     uvec ind = sort_index(eval);
     for(uint i=0;i<eval.size();i++)
         if (eval(i)-eval(ind(0))<1e-10)
@@ -92,9 +95,15 @@ EigenStateG<cmpx> FindGS(QOperator ham,FockBasisFixedChargeG<L>& b,
     auto H=ham.toMatrix<L,cmpx>(b,G);
 
     cx_vec evalz;
+    vec eval;
     cx_mat evec;
-    eigs_gen(evalz,evec,H ,std::min(b.Size()-2,L*2),"sr");
-    vec eval=arma::real(evalz);
+    if(b.Size()>10)
+    {
+        eigs_gen(evalz,evec,H ,std::min(b.Size()-2,101),"sr");
+        eval=arma::real(evalz);
+    }
+    else
+        eig_sym(eval,evec,cx_mat(H));
     uvec ind = sort_index(eval);
     for(uint i=0;i<eval.size();i++)
         if (eval(i)-eval(ind(0))<1e-10)
@@ -111,7 +120,10 @@ EigenState FindGS(QOperator ham,FockBasisFixedCharge<L>& b,int nPart)
 
     vec eval;
     mat evec;
-    eigs_sym(eval,evec,H ,std::min(b.Size()-2,100),"sa");
+    if(b.Size()>10)
+        eigs_sym(eval,evec,H ,std::min(b.Size()-2,101),"sa");
+    else
+        eig_sym(eval,evec,mat(H));
     uvec ind = sort_index(eval);
     for(uint i=0;i<eval.size();i++)
         if (eval(i)-eval(ind(0))<1e-10)
