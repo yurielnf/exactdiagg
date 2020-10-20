@@ -4,7 +4,7 @@
 #include<vector>
 #include<cmath>
 #include<functional>
-#include<omp.h>
+//#include<omp.h>
 #include"fockbasis.h"
 
 //-----------------------------------------------------------------------FermiOp---------------------------

@@ -86,12 +86,37 @@ EigenState FindGS(QOperatorG<T> ham,FockBasisFixedChargeG<L>& b,
     return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
 }
 
+template<int L>
+EigenStateG<cmpx> FindGS(QOperatorG<cmpx> ham,FockBasisFixedChargeG<L>& b,
+                  const SymmetryGroup<L,cmpx>& G, int nPart)
+{
+    //        b.SetSym(G,sym);
+    auto H=ham.toMatrix<L,cmpx>(b,G);
+
+    cx_vec evalz;
+    vec eval;
+    cx_mat evec;
+    if(b.Size()>10)
+    {
+        eigs_gen(evalz,evec,H ,std::min(b.Size()-2,101),"sr");
+        eval=arma::real(evalz);
+    }
+    else
+        eig_sym(eval,evec,cx_mat(H));
+    uvec ind = sort_index(eval);
+    for(uint i=0;i<eval.size();i++)
+        if (eval(i)-eval(ind(0))<1e-10)
+            cout<<eval[i]<<"\n";
+    cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
+    return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
+}
+
 
 template<int L>
 EigenStateG<cmpx> FindGS(QOperator ham,FockBasisFixedChargeG<L>& b,
-                  const SymmetryGroup<L,cmpx>& G, int nPart)
+                         const SymmetryGroup<L,cmpx>& G, int nPart)
 {
-//        b.SetSym(G,sym);
+    //        b.SetSym(G,sym);
     auto H=ham.toMatrix<L,cmpx>(b,G);
 
     cx_vec evalz;
