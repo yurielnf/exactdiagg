@@ -116,11 +116,11 @@ SymmetryGroup<4*L,cmpx> KH_Group()
 
     auto    G = trasl_group;
 
-//            G = G.DirectProd(SF_group);
-//            G = G.DirectProd(OF_group);
+            G = G.DirectProd(SF_group);
+            G = G.DirectProd(OF_group);
 
-//            G = G.DirectProd(rflx_group); //only for \Phi=0
-//            G = G.DirectProd(PH_group);   //only for half-filled
+            G = G.DirectProd(rflx_group); //only for \Phi=0
+            G = G.DirectProd(PH_group);   //only for half-filled
 
     return G;
 }
