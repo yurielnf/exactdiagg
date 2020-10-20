@@ -37,5 +37,9 @@ int main(int argc,const char *argv[])
         double tp=atof(argv[4]);
         TestHubbard2V(U,V,tp);
     }
+    else if (argc==3 && string(argv[1])=="hernan")
+    {// ./a.out hernan <paramFile>
+        Hernan_ED_gs(argv[2]);
+    }
     return 0;
 }
