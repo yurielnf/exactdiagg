@@ -1,0 +1,9 @@
+model	KHCN
+length	5
+t1	0.5
+t2	0.5
+U	4
+V	2
+J	0
+nPart	10
+phi	0
