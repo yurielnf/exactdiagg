@@ -7,7 +7,7 @@ using namespace std;
 int main(int argc,const char *argv[])
 {
     cout << "Hello World!" << endl << setprecision(15);
-//
+    //
 
     if (argc==2 && string(argv[1])=="tb")
         TestHamiltonianTB();
@@ -41,5 +41,13 @@ int main(int argc,const char *argv[])
     {// ./a.out hernan <paramFile>
         Hernan_ED_gs(argv[2]);
     }
+    else if (argc==3 && string(argv[2])=="cadenitaAA3")    // ./a.out param.txt cadenitaAA3
+    {
+        cout << "hasta aca ferpecto\n";
+        Parameters param(argv[1]);
+        TestGS_CadenitaAA3(param);
+    }
+    cout << "C'est fini" << endl;
+
     return 0;
 }

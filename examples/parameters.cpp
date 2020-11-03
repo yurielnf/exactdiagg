@@ -27,6 +27,16 @@ Parameters::Parameters(const char filename[])
         else if(param=="nPart") in>>nPart;
         else if(param=="phi") in>>phi;
 
+        else if(param=="periodic") in>>periodic;
+        else if(param=="t") in>>t;
+        else if(param=="tp") in>>tp;
+        else if(param=="tpp") in>>tpp;
+        else if(param=="tOO") in>>tOO;
+        else if(param=="U3") in>>U3;
+        else if(param=="mu") in>>mu;
+        else if(param=="muCu") in>>muCu;
+        else if(param=="Sz") in>>Sz;
+
         in.ignore(1000,'\n');
     }
 }

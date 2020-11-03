@@ -98,7 +98,7 @@ EigenStateG<cmpx> FindGS(QOperatorG<cmpx> ham,FockBasisFixedChargeG<L>& b,
     cx_mat evec;
     if(b.Size()>10)
     {
-        eigs_gen(evalz,evec,H ,std::min(b.Size()-2,101),"sr");
+        eigs_gen(evalz,evec,H ,std::min(b.Size()-2,201),"sr");
         eval=arma::real(evalz);
     }
     else

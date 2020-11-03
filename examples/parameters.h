@@ -18,6 +18,16 @@ struct Parameters
     double J=0;
     int nPart=10;
     double phi=0;
+
+    bool periodic=false;
+    double t=0.0;
+    double tp=0.0;
+    double tpp=0.0;
+    double tOO=0.0;
+    double U3=0.0;
+    double mu=0.0;
+    double muCu=0.0;
+    int Sz=0;
 };
 
 

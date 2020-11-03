@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <complex.h>
-#include "parameters.h"
 
 using namespace std;
 
@@ -143,15 +142,15 @@ void KHC_N(Parameters param)
     cout<<"nSym= "<<G.nSym()<<endl<<endl;
 
 
-        auto b=FockBasisFixedChargeG<Lt>(nPart, G);
+        auto b=FockBasisFixedChargeG<Lt>(nPart, G, 16);
         auto gs=FindGS<Lt>(H, b, G, nPart);
 
-        for(int nu=1; nu<G.nSym(); nu++)
-        {
-            b.SetSym(G, nu);
-            auto gsn = FindGS<Lt>(H, b, G, nPart);
-            gs = std::min( gs, gsn );
-        }
+//        for(int nu=1; nu<G.nSym(); nu++)
+//        {
+//            b.SetSym(G, nu);
+//            auto gsn = FindGS<Lt>(H, b, G, nPart);
+//            gs = std::min( gs, gsn );
+//        }
         cout<<"GS(nPart="<<gs.nPart<<") --> sym="<<gs.sym<<" ener="<<gs.ener<<endl<<endl;
 
 
