@@ -15,6 +15,7 @@ SOURCES += main.cpp \
 
 HEADERS += \
     exactdiagg/hamsolver.h \
+    exactdiagg/lanczos.h \
     exactdiagg/qoperator.h \
     exactdiagg/fockbasis.h \
     exactdiagg/symmetrygroup.h \

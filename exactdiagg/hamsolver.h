@@ -12,6 +12,7 @@
 #include"fockbasis.h"
 #include"qoperator.h"
 #include"symmetrygroup.h"
+#include"lanczos.h"
 
 
 template<class scalar=double>
@@ -66,24 +67,31 @@ bool operator<(const EigenStateG<scalar>& e1,const EigenStateG<scalar>& e2)
 
 using EigenState=EigenStateG<>;
 
-template<int L,class T>
-EigenState FindGS(QOperatorG<T> ham,FockBasisFixedChargeG<L>& b,
+template<int L>
+EigenState FindGS(QOperator ham,FockBasisFixedChargeG<L>& b,
                   const SymmetryGroup<L,double>& G, int nPart)
 {
     auto H=ham.template toMatrix<L>(b,G);
+    cout<<"matrix nonzero="<<H.n_nonzero<<endl; cout.flush();
 
-    vec eval;
-    mat evec;
-    if (b.Size()>10)
-        eigs_sym(eval,evec,H ,std::min(b.Size()-2,101),"sa");
-    else
-        eig_sym(eval,evec,Mat<T>(H));
-    uvec ind = sort_index(eval);
-    for(uint i=0;i<eval.size();i++)
-        if (eval(i)-eval(ind(0))<1e-10)
-            cout<<eval[i]<<"\n";
-    cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
-    return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
+//    vec eval;
+//    mat evec;
+//    if (b.Size()>10)
+//        eigs_sym(eval,evec,H ,std::min(b.Size()-2,101),"sa");
+//    else
+//        eig_sym(eval,evec,Mat<T>(H));
+//    uvec ind = sort_index(eval);
+//    for(uint i=0;i<eval.size();i++)
+//        if (eval(i)-eval(ind(0))<1e-10)
+//            cout<<eval[i]<<"\n";
+//    cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
+//    return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
+
+    Col<double> wf(b.Size());
+    wf.randu();
+    auto sol=Diagonalize<double>(H,wf);
+    cout<<sol.cIter<<" lanczos iter; "<<"nPart="<<nPart<<" sym="<<b.sym<<" ener="<<sol.ener0<<endl;
+    return {sol.ener0,sol.x0,nPart,b.sym};
 }
 
 template<int L>
@@ -92,23 +100,30 @@ EigenStateG<cmpx> FindGS(QOperatorG<cmpx> ham,FockBasisFixedChargeG<L>& b,
 {
     //        b.SetSym(G,sym);
     auto H=ham.toMatrix<L,cmpx>(b,G);
+    cout<<"matrix nonzero="<<H.n_nonzero<<endl; cout.flush();
 
-    cx_vec evalz;
-    vec eval;
-    cx_mat evec;
-    if(b.Size()>10)
-    {
-        eigs_gen(evalz,evec,H ,std::min(b.Size()-2,201),"sr");
-        eval=arma::real(evalz);
-    }
-    else
-        eig_sym(eval,evec,cx_mat(H));
-    uvec ind = sort_index(eval);
-    for(uint i=0;i<eval.size();i++)
-        if (eval(i)-eval(ind(0))<1e-10)
-            cout<<eval[i]<<"\n";
-    cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
-    return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
+//    cx_vec evalz;
+//    vec eval;
+//    cx_mat evec;
+//    if(b.Size()>10)
+//    {
+//        eigs_gen(evalz,evec,H ,std::min(b.Size()-2,201),"sr");
+//        eval=arma::real(evalz);
+//    }
+//    else
+//        eig_sym(eval,evec,cx_mat(H));
+//    uvec ind = sort_index(eval);
+//    for(uint i=0;i<eval.size();i++)
+//        if (eval(i)-eval(ind(0))<1e-10)
+//            cout<<eval[i]<<"\n";
+//    cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
+//    return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
+
+    Col<cmpx> wf(b.Size());
+    wf.randu();
+    auto sol=Diagonalize<cmpx>(H,wf);
+    cout<<sol.cIter<<" lanczos iter; "<<"nPart="<<nPart<<" sym="<<b.sym<<" ener="<<sol.ener0<<endl;
+    return {sol.ener0,sol.x0,nPart,b.sym};
 }
 
 
@@ -118,23 +133,30 @@ EigenStateG<cmpx> FindGS(QOperator ham,FockBasisFixedChargeG<L>& b,
 {
     //        b.SetSym(G,sym);
     auto H=ham.toMatrix<L,cmpx>(b,G);
+    cout<<"matrix nonzero="<<H.n_nonzero<<endl; cout.flush();
 
-    cx_vec evalz;
-    vec eval;
-    cx_mat evec;
-    if(b.Size()>10)
-    {
-        eigs_gen(evalz,evec,H ,std::min(b.Size()-2,101),"sr");
-        eval=arma::real(evalz);
-    }
-    else
-        eig_sym(eval,evec,cx_mat(H));
-    uvec ind = sort_index(eval);
-    for(uint i=0;i<eval.size();i++)
-        if (eval(i)-eval(ind(0))<1e-10)
-            cout<<eval[i]<<"\n";
-    cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
-    return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
+//    cx_vec evalz;
+//    vec eval;
+//    cx_mat evec;
+//    if(b.Size()>10)
+//    {
+//        eigs_gen(evalz,evec,H ,std::min(b.Size()-2,101),"sr");
+//        eval=arma::real(evalz);
+//    }
+//    else
+//        eig_sym(eval,evec,cx_mat(H));
+//    uvec ind = sort_index(eval);
+//    for(uint i=0;i<eval.size();i++)
+//        if (eval(i)-eval(ind(0))<1e-10)
+//            cout<<eval[i]<<"\n";
+//    cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
+//    return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
+
+    Col<cmpx> wf(b.Size());
+    wf.randu();
+    auto sol=Diagonalize<cmpx>(H,wf);
+    cout<<sol.cIter<<" lanczos iter; "<<"nPart="<<nPart<<" sym="<<b.sym<<" ener="<<sol.ener0<<endl;
+    return {sol.ener0,sol.x0,nPart,b.sym};
 }
 
 
@@ -142,19 +164,26 @@ template<int L>
 EigenState FindGS(QOperator ham,FockBasisFixedCharge<L>& b,int nPart)
 {
     auto H=ham.toMatrix<L>(b);
+    cout<<"matrix nonzero="<<H.n_nonzero<<endl; cout.flush();
 
-    vec eval;
-    mat evec;
-    if(b.Size()>10)
-        eigs_sym(eval,evec,H ,std::min(b.Size()-2,101),"sa");
-    else
-        eig_sym(eval,evec,mat(H));
-    uvec ind = sort_index(eval);
-    for(uint i=0;i<eval.size();i++)
-        if (eval(i)-eval(ind(0))<1e-10)
-            cout<<eval[i]<<"\n";
-    cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
-    return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
+//    vec eval;
+//    mat evec;
+//    if(b.Size()>10)
+//        eigs_sym(eval,evec,H ,std::min(b.Size()-2,101),"sa");
+//    else
+//        eig_sym(eval,evec,mat(H));
+//    uvec ind = sort_index(eval);
+//    for(uint i=0;i<eval.size();i++)
+//        if (eval(i)-eval(ind(0))<1e-10)
+//            cout<<eval[i]<<"\n";
+//    cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
+//    return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
+
+    Col<double> wf(b.Size());
+    wf.randu();
+    auto sol=Diagonalize<double>(H,wf);
+    cout<<sol.cIter<<" lanczos iter; "<<"nPart="<<nPart<<" sym="<<b.sym<<" ener="<<sol.ener0<<endl;
+    return {sol.ener0,sol.x0,nPart,b.sym};
 }
 
 

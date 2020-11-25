@@ -1,6 +1,6 @@
 #include"exactdiagg/all.h"
 
-#define NQUBIT_TB 8
+#define NQUBIT_TB 12
 
 using namespace std;
 
@@ -43,7 +43,7 @@ void TestHamiltonianTB()
     auto ham=HamiltonianTB(L,true);
 
     auto b=FockBasisFixedChargeG<L>(nPart,G,0);
-    b.Print();
+//    b.Print();
     auto gs=FindGS<L>(ham,b,G,nPart);
     b.SetSym(G,1);
     for(int nu=1;nu<G.nSym();nu++,b.SetSym(G,nu))
@@ -53,6 +53,6 @@ void TestHamiltonianTB()
     }
     cout<<"GS: nPart="<<gs.nPart<<" sym="<<gs.sym<<" ener="<<gs.ener<<endl;
     b.SetSym(G,gs.sym);
-    gs.Print(b);
+//    gs.Print(b);
     cout<<"exac="<<ExactEnergyTB(L,nPart)<<endl;
 }

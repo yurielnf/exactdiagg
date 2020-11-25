@@ -47,7 +47,6 @@ int main(int argc,const char *argv[])
         Parameters param(argv[1]);
         TestGS_CadenitaAA3(param);
     }
-    cout << "C'est fini" << endl;
 
     return 0;
 }

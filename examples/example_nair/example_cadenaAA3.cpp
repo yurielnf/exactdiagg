@@ -4,7 +4,7 @@
 #include<complex>
 #include<math.h>
 #include"cadenitaaa3.h"
-#include"parameters.h"
+#include"examples/parameters.h"
 
 using namespace std;
 
@@ -82,6 +82,7 @@ void TestGS_CadenitaAA3(const Parameters& par)//,int nTwist,int id, int id_last)
     {
         auto b=(ang_spin==0.0) ? FockBasisFixedChargeG<Lt>(par.nPart,G,nu,HasSz<Lt>{Sz})
                                : FockBasisFixedChargeG<Lt>(par.nPart,G,nu);
+        cout<<"basis size="<<b.Size()<<endl; cout.flush();
         auto gsn=FindGS<Lt>(hnn.Ham(),b,G,par.nPart);
         out<< "nu "<< nu << " ";
         out<<setprecision(9)<<gsn.ener << "\n";
