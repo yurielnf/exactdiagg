@@ -170,12 +170,11 @@ struct Lanczos
         while(cIter < nMaxIter)
         {
             Iterate(nInnerIter);
-
+            BuildGroundState();
 
             error2=fabs( pow(Dot(x0,A*x0),2)-Dot(x0,A*(A*x0))) ;
             if (error2<tol*tol || error<tol) break;
         }
-        BuildGroundState();
         if (error2>tol*tol && error>tol)
         {
             std::cout<<"lanczos failed, error2 = "<<error2<<" ";
@@ -194,4 +193,3 @@ Lanczos<Hamiltonian,Ket,scalar> Diagonalize(const Hamiltonian& H,Ket& wf,int nIt
 
 
 #endif // LANCZOS_H
-
