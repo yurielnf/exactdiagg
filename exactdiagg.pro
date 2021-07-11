@@ -3,7 +3,7 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
 
-LIBS += -larmadillo -lfftw3
+LIBS += -larmadillo
 
 SOURCES += main.cpp \
     examples/example_hernan/example_hernan.cpp \
