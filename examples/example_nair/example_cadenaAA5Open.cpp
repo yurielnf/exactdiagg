@@ -3,7 +3,7 @@
 #include<string>
 #include<complex>
 #include<math.h>
-#include"cadenitaaa3.h"
+#include"cadenitaaa5open.h"
 #include"examples/parameters.h"
 
 using namespace std;
@@ -24,11 +24,11 @@ struct HasSz
 };
 
 
-void TestGS_CadenitaAA3(const Parameters& par)//,int nTwist,int id, int id_last)
+void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
 {
     ofstream out(string("energ.txt"));
-    const int Lt=48;  //  Lt = nq*L
-    const int nq=6; //number of qubits per unit cell
+    const int Lt=4*10;  //  Lt = nq*L
+    const int nq=10; //number of qubits per unit cell
 
     auto T=TranslationOp<Lt>(nq);  //este traslada en la celda completa. no cambiar.
     auto Gt=CyclicGroupPow<Lt>(T, Lt/nq);
@@ -36,10 +36,9 @@ void TestGS_CadenitaAA3(const Parameters& par)//,int nTwist,int id, int id_last)
 
     bool Phi=par.phi;
 
-    double ang_twist=0.0;
     double ang_spin=0.0;
 
-    CadenitaAA3 hnn(Lt/nq);
+    CadenitaAA5Open hnn(Lt/nq);
     out << "Parameters\n";
     hnn.periodic=par.periodic;
       out << "periodic="<<hnn.periodic;
@@ -107,5 +106,3 @@ void TestGS_CadenitaAA3(const Parameters& par)//,int nTwist,int id, int id_last)
 //        cout<<i<<" "<<n_part[i]<<endl;
 //    gs.Print(b,1e-1);
 }
-
-

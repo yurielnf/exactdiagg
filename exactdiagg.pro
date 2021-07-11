@@ -8,6 +8,7 @@ LIBS += -larmadillo
 SOURCES += main.cpp \
     examples/example_hernan/example_hernan.cpp \
     examples/example_nair/example_cadenaAA3.cpp \
+    examples/example_nair/example_cadenaAA5Open.cpp \
     examples/parameters.cpp \
     examples/example_tb.cpp \
     examples/example_hubbard.cpp \
@@ -22,6 +23,7 @@ HEADERS += \
     exactdiagg/all.h \
     examples/all.h \
     examples/example_nair/cadenitaaa3.h \
+    examples/example_nair/cadenitaaa5open.h \
     examples/parameters.h
 
 DISTFILES += \

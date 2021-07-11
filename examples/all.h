@@ -12,5 +12,6 @@ void Hernan_ED_gs(const char filename[]);
 
 //Nair
 void TestGS_CadenitaAA3(const Parameters& par);
+void TestGS_CadenitaAA5(const Parameters& par);
 
 #endif // TOROU_H

@@ -47,6 +47,11 @@ int main(int argc,const char *argv[])
         Parameters param(argv[1]);
         TestGS_CadenitaAA3(param);
     }
+    else if (argc==3 && string(argv[2])=="cadenitaAA5")    // ./a.out param.txt cadenitaAA3
+    {
+        Parameters param(argv[1]);
+        TestGS_CadenitaAA5(param);
+    }
 
     return 0;
 }
