@@ -1,0 +1,346 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section
+Model
+\end_layout
+
+\begin_layout Standard
+We consider two orbitals (
+\begin_inset Formula $p_{x}$
+\end_inset
+
+, 
+\begin_inset Formula $p_{y}$
+\end_inset
+
+) for O atoms (two O per unit cell), one orbital (
+\begin_inset Formula $d_{xy}$
+\end_inset
+
+) for Cu atoms.
+ The Hamiltonian is:
+\begin_inset Formula 
+\[
+H=\sum_{iIJ\sigma}\Delta_{IJ}c_{iI\sigma}^{\dagger}c_{iJ\sigma}+\sum_{iIJ\sigma}t_{IJ}\left(c_{iI\sigma}^{\dagger}c_{i+1,J\sigma}+h.c.\right)+\sum_{i}\hat{V_{i}}\mbox{ ,}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\Delta=\begin{pmatrix}0 & 0 & t' & 0 & 0\\
+0 & 0 & t_{CuO} & 0 & 0\\
+t' & t_{CuO} & -\mu_{Cu} & t_{CuO} & t'\\
+0 & 0 & t_{CuO} & 0 & 0\\
+0 & 0 & t' & 0 & 0
+\end{pmatrix}\mbox{, }t=\begin{pmatrix}t_{OO} & t_{OO} & t_{CuO} & 0 & 0\\
+t_{OO} & t_{OO} & t'_{CuO} & 0 & 0\\
+0 & 0 & t_{CuCu} & 0 & 0\\
+0 & 0 & t'_{CuO} & t_{OO} & t_{OO}\\
+0 & 0 & t_{CuO} & t_{OO} & t_{OO}
+\end{pmatrix}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $i$
+\end_inset
+
+ is the lattice index and 
+\begin_inset Formula $I,J=p_{x}^{O_{1}},p_{y}^{O_{1}},d_{xy}^{Cu},p_{x}^{O_{2}},p_{y}^{O_{2}},$
+\end_inset
+
+ are orbital indexes, Figure 1.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename unit_cell.jpg
+	lyxscale 10
+	width 6cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Unit cell 
+\begin_inset Formula $CuO_{2}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The local Coulomb interaction 
+\begin_inset Formula $\hat{V}_{i}$
+\end_inset
+
+ is
+\begin_inset Formula 
+\begin{equation}
+\begin{array}{c}
+\hat{V_{i}}=U\sum_{I\ne d_{xy}^{Cu}}n_{iI\uparrow}n_{iI\downarrow}+\sum_{I=1,4,\sigma\sigma'}\left(U-2J-J\delta_{\sigma\sigma'}\right)n_{iI\sigma}n_{i\bar{I}\sigma'}-\\
++J\sum_{I\ne d_{xy}^{Cu}}\left(-c_{iI\uparrow}^{\dagger}c_{i\bar{I}\downarrow}^{\dagger}c_{i\bar{I}\uparrow}c_{iI\downarrow}+c_{iI\uparrow}^{\dagger}c_{iI\downarrow}^{\dagger}c_{i\bar{I}\downarrow}c_{i\bar{I}\uparrow}\right)+U_{3}n_{i3\uparrow}n_{i3\downarrow}.
+\end{array}\label{eq:interaction-1}
+\end{equation}
+
+\end_inset
+
+ We use the values: 
+\begin_inset Formula $t_{CuO}=1.1$
+\end_inset
+
+, 
+\begin_inset Formula $t'_{CuO}=0.1$
+\end_inset
+
+, 
+\begin_inset Formula $t_{CuCu}=0.1$
+\end_inset
+
+, 
+\begin_inset Formula $t_{OO}=-0.32$
+\end_inset
+
+, 
+\begin_inset Formula $U_{3}=8$
+\end_inset
+
+, 
+\begin_inset Formula $U=2$
+\end_inset
+
+, 
+\begin_inset Formula $J=0.838$
+\end_inset
+
+, 
+\begin_inset Formula $\mu_{Cu}=0.5$
+\end_inset
+
+.
+ The global chemical potential 
+\begin_inset Formula $\mu$
+\end_inset
+
+ should be tuned to obtain 
+\begin_inset Formula $n_{Cu}+n_{O}=1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Spin rotation
+\end_layout
+
+\begin_layout Standard
+Rotating the spins around 
+\begin_inset Formula $y$
+\end_inset
+
+ axis by
+\begin_inset Formula 
+\[
+R_{y}(\theta)=\cos(\theta/2)I_{2}-i\sin(\theta/2)\sigma_{y}=\cos(\theta/2)\begin{pmatrix}1 & 0\\
+0 & 1
+\end{pmatrix}+\sin(\theta/2)\begin{pmatrix}0 & -1\\
+1 & 0
+\end{pmatrix}
+\]
+
+\end_inset
+
+ gives the following transformation for 
+\begin_inset Formula $c^{\dagger}$
+\end_inset
+
+ operators:
+\begin_inset Formula 
+\[
+\begin{pmatrix}c_{iI\uparrow}\\
+c_{iI\downarrow}
+\end{pmatrix}=\begin{pmatrix}c & -s\\
+s & c
+\end{pmatrix}\begin{pmatrix}d_{iI\uparrow}\\
+d_{iI\downarrow}
+\end{pmatrix},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $c=\cos(\theta/2)$
+\end_inset
+
+, 
+\begin_inset Formula $s=\sin(\theta/2)$
+\end_inset
+
+.
+ The idea is to rotate the site 
+\begin_inset Formula $j$
+\end_inset
+
+ the angle 
+\begin_inset Formula $j\theta$
+\end_inset
+
+.
+ The effect of this rotation can be written in terms of 
+\begin_inset Formula $\Delta$
+\end_inset
+
+ and 
+\begin_inset Formula $t$
+\end_inset
+
+ matrices:
+\begin_inset Formula 
+\[
+R(\theta)=I_{5}\otimes\begin{pmatrix}c & -s\\
+s & c
+\end{pmatrix}\mbox{,}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\tilde{\Delta}=R(j\theta)^{\dagger}\left(\Delta\otimes I_{2}\right)R(j\theta)=\Delta\otimes I_{2}\mbox{,}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\tilde{t}=R(j\theta)^{\dagger}\left(t\otimes I_{2}\right)R\left((j+1)\theta\right)=\left(t\otimes I_{2}\right)R\left(\theta\right)=t\otimes\begin{pmatrix}c & -s\\
+s & c
+\end{pmatrix}\mbox{.}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Finally, the Hamiltonian becomes:
+\begin_inset Formula 
+\[
+H=\sum_{iIJ\sigma}\Delta_{IJ}d_{iI\sigma}^{\dagger}d_{iJ\sigma}+\sum_{iIJ\sigma\sigma'}\left(\tilde{t}_{I\sigma J\sigma'}d_{iI\sigma}^{\dagger}d_{i+1,J\sigma'}+h.c.\right)+\sum_{i}\hat{V_{i}}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can also incorporate twisted boundary conditions by setting 
+\begin_inset Formula $\tilde{t}\rightarrow\tilde{t}e^{i\phi}$
+\end_inset
+
+.
+\end_layout
+
+\end_body
+\end_document
