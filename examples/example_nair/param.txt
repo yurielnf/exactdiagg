@@ -1,0 +1,16 @@
+periodic 1
+nPart 4
+
+t 1.0
+tp 0.0
+tpp 0.0
+tOO 0.5
+J 1.0
+U 3.0
+U3 10.0
+
+mu 0.0
+muCu 5.0
+
+Sz 0
+phi 1

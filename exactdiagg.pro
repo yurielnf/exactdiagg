@@ -27,5 +27,6 @@ HEADERS += \
     examples/parameters.h
 
 DISTFILES += \
+    examples/example_nair/param.txt \
     examples/plot_hubbard.gnuplot \
     README.md

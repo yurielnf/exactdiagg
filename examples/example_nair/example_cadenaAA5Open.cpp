@@ -57,23 +57,23 @@ void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
     hnn.U3=par.U3;
       out << " U3="<<hnn.U3;
     if ( Phi )
-      hnn.phi=2*M_PI/Lt;
+      hnn.phi=M_PI*nq/Lt; // <------ chequear con cuidado!!!
     else hnn.phi=0;
-      out << "\nphi="<<hnn.phi;
+      out << "\nphi="<<hnn.phi*Lt/nq;
     hnn.angle_spin=ang_spin;
       out << " ang_spin="<<hnn.angle_spin;
 
 
     hnn.Initialize();
     int sz=par.Sz;
-    int Sz=2*sz;
+    int Sz=2*sz; // <--------- Ojo, si el numero de particulas es impar, esto no funciona
       out << " Sz="<<Sz;
 
 
     cout<<setprecision(15);
     EigenStateG<cmpx> gs;
 
-    out<<setprecision(15)<<"ang_spin*Lt/nq "<<ang_spin*Lt/nq<<"\n";
+    out<<setprecision(15)<<" ang_spin*Lt/nq "<<ang_spin*Lt/nq<<"\n";
     out<<"\n";
     out<<"Energy\n";
 
