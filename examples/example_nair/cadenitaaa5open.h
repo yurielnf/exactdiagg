@@ -12,7 +12,7 @@ struct CadenitaAA5Open
     int L; //cantidad de celdas unidad
     double t=1.1, tp=0.1, tpp=0.1, tOO=-0.32, U=2, U3=7, J=0.838, muCu=0.5; //2.595;
     bool periodic=true;
-    double mu=0,phi=0,angle_spin=0;
+    double mu=0,phi=0/*,angle_spin=0*/;
 private:
     arma::mat delta, hop, Umat;
 public:
@@ -42,16 +42,21 @@ public:
                 Umat(toInt(0,s),toInt(1,sp))=c;
                 Umat(toInt(3,s),toInt(4,sp))=c;
             }
-        double q=angle_spin;
-        std::vector<double> dat={cos(q/2),sin(q/2),-sin(q/2),cos(q/2)}; // col major
-        mat rot(dat.data(),2,2);
-        hop=kron(hop,rot);
+//        double q=angle_spin;
+//        std::vector<double> dat={cos(q/2),sin(q/2),-sin(q/2),cos(q/2)}; // col major
+//        mat rot(dat.data(),2,2);
+//        hop1=kron(hop1,rot);
+//        for(int i=0;i<nOrb;i++)
+//            for(int j=0;j<nOrb;j++)
+//                for(int s:{0,1})
+//                    for(int sp:{0,1})
+//                        hop(toInt(i,s),toInt(j,sp))=hop1(i,j)*rot(s,sp);
     }
-    int toInt(int i, int Ii, int spin) const { return spin+Ii*2+i*nOrb*2; }
-    int toInt(int Ii, int spin) const { return spin+Ii*2; }
-    //    int toInt(int i, int Ii, int spin) const { return i+Ii*L+spin*L*nOrb; }
-//        int toInt(int i, int Ii, int spin) const { return Ii+i*nOrb+spin*nOrb*L; }
-//        int toInt(int Ii, int spin) const { return Ii+spin*nOrb; }
+//    int toInt(int i, int Ii, int spin) const { return spin+Ii*2+i*nOrb*2; }
+//    int toInt(int Ii, int spin) const { return spin+Ii*2; }
+//        int toInt(int i, int Ii, int spin) const { return i+Ii*L+spin*L*nOrb; }
+    int toInt(int i, int Ii, int spin) const { return Ii+i*nOrb+spin*nOrb*L; }
+    int toInt(int Ii, int spin) const { return Ii+spin*nOrb; }
 
     QOperatorG<cmpx> Kin() const
     {
@@ -64,7 +69,8 @@ public:
                     for(int s=0;s<2;s++)
                         for(int sp=0;sp<2;sp++)
                         {
-                            double tt=hop(toInt(ii,s), toInt(jj,sp));
+//                            double tt=hop(toInt(ii,s), toInt(jj,sp));
+                            double tt=hop(ii, jj);
                             if (tt!=0)
                             {
                                 int pi=toInt(i,ii,s);

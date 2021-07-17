@@ -35,13 +35,17 @@ void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
     auto Gt=CyclicGroupPow<Lt>(T, Lt/nq);
     auto G=Gt;
     */
-
+    /*
     const int L=Lt/nq;
     auto Refl=TensorPow<nq,L,ElementaryOp<nq>> ( ReflectionOp<nq> );
     auto G = Z2_Group<Lt,cmpx>(Refl);
+    */
+    auto T1=TranslationOp<Lt/2>(nq/2);
+    auto T=TensorPow<Lt/2,2> ( T1 );
+    auto Gt=CyclicGroupPow<Lt>(T, Lt/nq);
+    auto G = Gt;
 
     bool Phi=par.phi;
-    double ang_spin=0.0;    
     CadenitaAA5Open hnn(Lt/nq);
     {
         out << "Parameters\n";
@@ -65,8 +69,6 @@ void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
             hnn.phi=M_PI*nq/Lt; // <------ chequear con cuidado!!!
         else hnn.phi=0;
         out << "\nphi="<<hnn.phi*Lt/nq;
-        hnn.angle_spin=ang_spin;
-        out << " ang_spin="<<hnn.angle_spin;
     }
 
     hnn.Initialize();
@@ -78,14 +80,13 @@ void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
     cout<<setprecision(15);
     EigenStateG<cmpx> gs;
 
-    out<<setprecision(15)<<" ang_spin*Lt/nq "<<ang_spin*Lt/nq<<"\n";
+//    out<<setprecision(15)<<" ang_spin*Lt/nq "<<ang_spin*Lt/nq<<"\n";
     out<<"\n";
     out<<"Energy\n";
 
     for(int nu=0;nu<G.nSym();nu++)
     {
-        auto b=(ang_spin==0.0) ? FockBasisFixedChargeG<Lt>(par.nPart,G,nu,HasSz<Lt>{Sz})
-                               : FockBasisFixedChargeG<Lt>(par.nPart,G,nu);
+        auto b=FockBasisFixedChargeG<Lt>(par.nPart,G,nu/*,HasSz<Lt>{Sz}*/); //FockBasisFixedChargeG<Lt>(par.nPart,G,nu);
         cout<<"basis size="<<b.Size()<<endl; cout.flush();
         auto gsn=FindGS<Lt>(hnn.Ham(),b,G,par.nPart);
         out<< "nu "<< nu << " ";
@@ -96,8 +97,7 @@ void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
     //if ((id+1)%nTwist==0) out<<"\n\n";
 
 //    vector<double> n_part(Lt);
-    auto b=(ang_spin==0.0) ? FockBasisFixedChargeG<Lt>(par.nPart,G,gs.sym,HasSz<Lt>{Sz})
-                           : FockBasisFixedChargeG<Lt>(par.nPart,G,gs.sym);
+    auto b=FockBasisFixedChargeG<Lt>(par.nPart,G,gs.sym/*,HasSz<Lt>{Sz}*/) ; //FockBasisFixedChargeG<Lt>(par.nPart,G,gs.sym);
 
 
 //    for(int i=0;i<Lt;i++)
