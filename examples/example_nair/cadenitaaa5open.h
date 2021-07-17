@@ -48,10 +48,10 @@ public:
         hop=kron(hop,rot);
     }
     int toInt(int i, int Ii, int spin) const { return spin+Ii*2+i*nOrb*2; }
-    //    int toInt(int i, int Ii, int spin) const { return i+Ii*L+spin*L*nOrb; }
-    //    int toInt(int i, int Ii, int spin) const { return Ii+i*nOrb+spin*nOrb*L; }
     int toInt(int Ii, int spin) const { return spin+Ii*2; }
-    //    int toInt(int Ii, int spin) const { return Ii+spin*nOrb; }
+    //    int toInt(int i, int Ii, int spin) const { return i+Ii*L+spin*L*nOrb; }
+//        int toInt(int i, int Ii, int spin) const { return Ii+i*nOrb+spin*nOrb*L; }
+//        int toInt(int Ii, int spin) const { return Ii+spin*nOrb; }
 
     QOperatorG<cmpx> Kin() const
     {

@@ -30,39 +30,44 @@ void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
     const int Lt=4*10;  //  Lt = nq*L
     const int nq=10; //number of qubits per unit cell
 
+    /*
     auto T=TranslationOp<Lt>(nq);  //este traslada en la celda completa. no cambiar.
     auto Gt=CyclicGroupPow<Lt>(T, Lt/nq);
     auto G=Gt;
+    */
+
+    const int L=Lt/nq;
+    auto Refl=TensorPow<nq,L,ElementaryOp<nq>> ( ReflectionOp<nq> );
+    auto G = Z2_Group<Lt,cmpx>(Refl);
 
     bool Phi=par.phi;
-
-    double ang_spin=0.0;
-
+    double ang_spin=0.0;    
     CadenitaAA5Open hnn(Lt/nq);
-    out << "Parameters\n";
-    hnn.periodic=par.periodic;
-      out << "periodic="<<hnn.periodic;
-    hnn.mu=par.mu;
-      out << " mu="<<hnn.mu;
-    hnn.J=par.J;
-      out << " J="<<hnn.J;
-    hnn.muCu=par.muCu;
-      out << " muCu="<<hnn.muCu;
-    hnn.tp=par.tp;
-      out << "\ntp="<<hnn.tp;
-    hnn.tpp=par.tpp;
-      out << " tpp="<<hnn.tpp;
-    hnn.tOO=par.tOO;
-      out << " tOO="<<hnn.tOO;
-    hnn.U3=par.U3;
-      out << " U3="<<hnn.U3;
-    if ( Phi )
-      hnn.phi=M_PI*nq/Lt; // <------ chequear con cuidado!!!
-    else hnn.phi=0;
-      out << "\nphi="<<hnn.phi*Lt/nq;
-    hnn.angle_spin=ang_spin;
-      out << " ang_spin="<<hnn.angle_spin;
-
+    {
+        out << "Parameters\n";
+        hnn.periodic=par.periodic;
+        out << "periodic="<<hnn.periodic;
+        hnn.mu=par.mu;
+        out << " mu="<<hnn.mu;
+        hnn.J=par.J;
+        out << " J="<<hnn.J;
+        hnn.muCu=par.muCu;
+        out << " muCu="<<hnn.muCu;
+        hnn.tp=par.tp;
+        out << "\ntp="<<hnn.tp;
+        hnn.tpp=par.tpp;
+        out << " tpp="<<hnn.tpp;
+        hnn.tOO=par.tOO;
+        out << " tOO="<<hnn.tOO;
+        hnn.U3=par.U3;
+        out << " U3="<<hnn.U3;
+        if ( Phi )
+            hnn.phi=M_PI*nq/Lt; // <------ chequear con cuidado!!!
+        else hnn.phi=0;
+        out << "\nphi="<<hnn.phi*Lt/nq;
+        hnn.angle_spin=ang_spin;
+        out << " ang_spin="<<hnn.angle_spin;
+    }
 
     hnn.Initialize();
     int sz=par.Sz;
