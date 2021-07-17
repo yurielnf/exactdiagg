@@ -74,24 +74,33 @@ EigenState FindGS(QOperator ham,FockBasisFixedChargeG<L>& b,
     auto H=ham.template toMatrix<L>(b,G);
     cout<<"matrix nonzero="<<H.n_nonzero<<endl; cout.flush();
 
-//    vec eval;
-//    mat evec;
-//    if (b.Size()>10)
-//        eigs_sym(eval,evec,H ,std::min(b.Size()-2,101),"sa");
-//    else
-//        eig_sym(eval,evec,Mat<T>(H));
-//    uvec ind = sort_index(eval);
+    vec eval;
+    mat evec;
+    if (b.Size()>10)
+        eigs_sym(eval,evec,H ,std::min(b.Size()-2,101),"sa");
+    else
+        eig_sym(eval,evec,H);
+    uvec ind = sort_index(eval);
 //    for(uint i=0;i<eval.size();i++)
 //        if (eval(i)-eval(ind(0))<1e-10)
 //            cout<<eval[i]<<"\n";
-//    cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
-//    return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
+    std::vector<double> unique_eval={ eval(ind(0)) };
+    for(uint i=0;i<eval.size();i++)
+    {
+        const auto x=eval(ind(i));
+        if (x-unique_eval.back()>1e-10)
+            unique_eval.push_back(x);
+        if (unique_eval.size()>2) break; // only print the first 2 different evals
+        cout<<x<<"\n";
+    }
+    cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
+    return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
 
-    Col<double> wf(b.Size());
-    wf.randu();
-    auto sol=Diagonalize<double>(H,wf);
-    cout<<sol.cIter<<" lanczos iter; "<<"nPart="<<nPart<<" sym="<<b.sym<<" ener="<<sol.ener0<<endl;
-    return {sol.ener0,sol.x0,nPart,b.sym};
+//    Col<double> wf(b.Size());
+//    wf.randu();
+//    auto sol=Diagonalize<double>(H,wf);
+//    cout<<sol.cIter<<" lanczos iter; "<<"nPart="<<nPart<<" sym="<<b.sym<<" ener="<<sol.ener0<<endl;
+//    return {sol.ener0,sol.x0,nPart,b.sym};
 }
 
 template<int L>
@@ -113,9 +122,18 @@ EigenStateG<cmpx> FindGS(QOperatorG<cmpx> ham,FockBasisFixedChargeG<L>& b,
     else
         eig_sym(eval,evec,cx_mat(H));
     uvec ind = sort_index(eval);
+//    for(uint i=0;i<eval.size();i++)
+//        if (eval(i)-eval(ind(0))<1e-10)
+//            cout<<eval[i]<<"\n";
+    std::vector<double> unique_eval={ eval(ind(0)) };
     for(uint i=0;i<eval.size();i++)
-        if (eval(i)-eval(ind(0))<1e-10)
-            cout<<eval[i]<<"\n";
+    {
+        const auto x=eval(ind(i));
+        if (x-unique_eval.back()>1e-10)
+            unique_eval.push_back(x);
+        if (unique_eval.size()>2) break; // only print the first 2 different evals
+        cout<<x<<"\n";
+    }
     cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
     return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
 
@@ -146,9 +164,18 @@ EigenStateG<cmpx> FindGS(QOperator ham,FockBasisFixedChargeG<L>& b,
     else
         eig_sym(eval,evec,cx_mat(H));
     uvec ind = sort_index(eval);
+//    for(uint i=0;i<eval.size();i++)
+//        if (eval(i)-eval(ind(0))<1e-10)
+//            cout<<eval[i]<<"\n";
+    std::vector<double> unique_eval={ eval(ind(0)) };
     for(uint i=0;i<eval.size();i++)
-        if (eval(i)-eval(ind(0))<1e-10)
-            cout<<eval[i]<<"\n";
+    {
+        const auto x=eval(ind(i));
+        if (x-unique_eval.back()>1e-10)
+            unique_eval.push_back(x);
+        if (unique_eval.size()>2) break; // only print the first 2 different evals
+        cout<<x<<"\n";
+    }
     cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
     return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
 
@@ -173,9 +200,18 @@ EigenState FindGS(QOperator ham,FockBasisFixedCharge<L>& b,int nPart)
     else
         eig_sym(eval,evec,mat(H));
     uvec ind = sort_index(eval);
+//    for(uint i=0;i<eval.size();i++)
+//        if (eval(i)-eval(ind(0))<1e-10)
+//            cout<<eval[i]<<"\n";
+    std::vector<double> unique_eval={ eval(ind(0)) };
     for(uint i=0;i<eval.size();i++)
-        if (eval(i)-eval(ind(0))<1e-10)
-            cout<<eval[i]<<"\n";
+    {
+        const auto x=eval(ind(i));
+        if (x-unique_eval.back()>1e-10)
+            unique_eval.push_back(x);
+        if (unique_eval.size()>2) break; // only print the first 2 different evals
+        cout<<x<<"\n";
+    }
     cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
     return {eval(ind(0)),evec.col(ind(0)),nPart,b.sym};
 
