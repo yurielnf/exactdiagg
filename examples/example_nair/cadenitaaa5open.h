@@ -8,7 +8,7 @@
 
 struct CadenitaAA5Open
 {
-    const int nOrb=5;
+    static const int nOrb=5;
     int L; //cantidad de celdas unidad
     double t=1.1, tp=0.1, tpp=0.1, tOO=-0.32, U=2, U3=7, J=0.838, muCu=0.5; //2.595;
     bool periodic=true;
@@ -54,13 +54,14 @@ public:
     }
 //    int toInt(int i, int Ii, int spin) const { return spin+Ii*2+i*nOrb*2; }
 //    int toInt(int Ii, int spin) const { return spin+Ii*2; }
-//        int toInt(int i, int Ii, int spin) const { return i+Ii*L+spin*L*nOrb; }
+
+//    int toInt(int i, int Ii, int spin) const { return i+Ii*L+spin*L*nOrb; }
     int toInt(int i, int Ii, int spin) const { return Ii+i*nOrb+spin*nOrb*L; }
     int toInt(int Ii, int spin) const { return Ii+spin*nOrb; }
 
-    QOperatorG<cmpx> Kin() const
+    QOperatorG<double> Kin() const
     {
-        QOperatorG<cmpx> h;
+        QOperatorG<double> h;
         for(int i=0;i<L-1+periodic; i++)
             for(int ii=0;ii<nOrb;ii++)
                 for(int jj=0;jj<nOrb;jj++)
@@ -71,12 +72,13 @@ public:
                         {
 //                            double tt=hop(toInt(ii,s), toInt(jj,sp));
                             double tt=hop(ii, jj);
+                            if (periodic && phi && i==L-1) tt=-tt;
                             if (tt!=0)
                             {
                                 int pi=toInt(i,ii,s);
                                 int pj=toInt((i+1)%L,jj,sp);
-                                h.Add( FermiOp(pi,true)*FermiOp(pj,false), tt*exp( cmpx{0,phi}) );
-                                h.Add( FermiOp(pj,true)*FermiOp(pi,false), tt*exp(-cmpx{0,phi}) );
+                                h.Add( FermiOp(pi,true)*FermiOp(pj,false), tt ); //tt*exp( cmpx{0,phi})
+                                h.Add( FermiOp(pj,true)*FermiOp(pi,false), tt ); //tt*exp(-cmpx{0,phi})
                             }
                         }
                     double ee=delta(ii,jj);
@@ -90,9 +92,9 @@ public:
                 }
         return h;
     }
-    QOperatorG<cmpx> Pot() const
+    QOperatorG<double> Pot() const
     {
-        QOperatorG<cmpx> h;
+        QOperatorG<double> h;
         for(int i=0;i<L; i++)
             for(int ii=0;ii<nOrb;ii++)
                 for(int s=0;s<2;s++)
@@ -126,7 +128,36 @@ public:
                     }
         return h;
     }
-    QOperatorG<cmpx> Ham() const { return Kin()+Pot(); }
+    QOperatorG<double> Ham() const { return Kin()+Pot(); }
+
+    template<int Lt>
+    std::function<bool(FockState<Lt>)> HasSz(int Sz) const
+    {
+        return [=](const FockState<Lt>& f) {
+            int sum=0;
+            for(int i=0;i<L;i++)
+                for(int ii=0;ii<nOrb;ii++)
+                    sum+=f.test(toInt(i,ii,0))-
+                         f.test(toInt(i,ii,1));
+            return sum==Sz;
+        };
+    }
+
+    template<int Lt>
+    static SymmetryGroup<Lt,cmpx> SymTraslation()
+    {
+        const int L=Lt/(2*nOrb);
+        auto T1=TranslationOp<Lt/2>(nOrb);
+        auto T=TensorPow<Lt/2,2> ( T1 );
+        return CyclicGroupPow<Lt>(T, L);
+    }
+
+    template<int Lt>
+    static SymmetryGroup<Lt,double> SymReflectionOnSite()
+    {
+        auto Refl=TensorPow<nOrb,Lt/nOrb,ElementaryOp<nOrb>> ( ReflectionOp<nOrb> );
+        return Z2_Group<Lt>(Refl);
+    }
 
 };
 

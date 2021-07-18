@@ -8,20 +8,23 @@
 
 using namespace std;
 
-template<int Lt>
-struct HasSz
-{
-    int sz;
-    HasSz(int sz):sz(sz){}
-    bool operator()(const FockState<Lt>& f)
-    {
-        int sum=0;
-        for(uint i=0;i<Lt;i++)
-            if ( i%2==0 ) sum-=f.test(i);
-            else sum+=f.test(i);
-        return sum==sz;
-    }
-};
+//template<int Lt>
+//struct HasSz
+//{
+//    int sz;
+//    function<int(int,int,int)> toInt;
+//    HasSz(int sz, function<int(int,int)> toInt):sz(sz),toInt(toInt){}
+//    bool operator()(const FockState<Lt>& f)
+//    {
+//        int sum=0;
+//        const int nOrb=Lt/2;
+//        for(int i=0;i<nOrb;i++)
+//            sum-=f.test(toInt(i,0));
+//        for(int i=0;i<nOrb;i++)
+//            sum+=f.test(toInt(i,1));
+//        return sum==sz;
+//    }
+//};
 
 
 void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
@@ -30,20 +33,21 @@ void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
     const int Lt=4*10;  //  Lt = nq*L
     const int nq=10; //number of qubits per unit cell
 
-    /*
-    auto T=TranslationOp<Lt>(nq);  //este traslada en la celda completa. no cambiar.
-    auto Gt=CyclicGroupPow<Lt>(T, Lt/nq);
-    auto G=Gt;
-    */
-    /*
-    const int L=Lt/nq;
-    auto Refl=TensorPow<nq,L,ElementaryOp<nq>> ( ReflectionOp<nq> );
-    auto G = Z2_Group<Lt,cmpx>(Refl);
-    */
-    auto T1=TranslationOp<Lt/2>(nq/2);
-    auto T=TensorPow<Lt/2,2> ( T1 );
-    auto Gt=CyclicGroupPow<Lt>(T, Lt/nq);
-    auto G = Gt;
+
+//    auto T=TranslationOp<Lt>(nq);  //este traslada en la celda completa. no cambiar.
+//    auto Gt=CyclicGroupPow<Lt>(T, Lt/nq);
+//    auto G=Gt;
+
+//    const int L=Lt/nq;
+//    auto Refl=TensorPow<nq,L,ElementaryOp<nq>> ( ReflectionOp<nq> );
+//    auto G = Z2_Group<Lt,cmpx>(Refl);
+
+
+
+//    auto T1=TranslationOp<Lt/nq>(1);
+//    auto T=TensorPow<Lt/nq,nq> ( T1 );
+//    auto Gt=CyclicGroupPow<Lt>(T, Lt/nq);
+//    auto G = Gt;
 
     bool Phi=par.phi;
     CadenitaAA5Open hnn(Lt/nq);
@@ -78,15 +82,19 @@ void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
 
 
     cout<<setprecision(15);
-    EigenStateG<cmpx> gs;
+
+//    auto G=hnn.SymTraslation<Lt>();
+    auto G=hnn.SymReflectionOnSite<Lt>();
+    EigenStateG<double> gs;
 
 //    out<<setprecision(15)<<" ang_spin*Lt/nq "<<ang_spin*Lt/nq<<"\n";
     out<<"\n";
     out<<"Energy\n";
 
+    auto hasSz=hnn.HasSz<Lt>(Sz);
     for(int nu=0;nu<G.nSym();nu++)
     {
-        auto b=FockBasisFixedChargeG<Lt>(par.nPart,G,nu/*,HasSz<Lt>{Sz}*/); //FockBasisFixedChargeG<Lt>(par.nPart,G,nu);
+        auto b=FockBasisFixedChargeG<Lt>(par.nPart,G,nu,hasSz); //FockBasisFixedChargeG<Lt>(par.nPart,G,nu);
         cout<<"basis size="<<b.Size()<<endl; cout.flush();
         auto gsn=FindGS<Lt>(hnn.Ham(),b,G,par.nPart);
         out<< "nu "<< nu << " ";
@@ -97,7 +105,7 @@ void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
     //if ((id+1)%nTwist==0) out<<"\n\n";
 
 //    vector<double> n_part(Lt);
-    auto b=FockBasisFixedChargeG<Lt>(par.nPart,G,gs.sym/*,HasSz<Lt>{Sz}*/) ; //FockBasisFixedChargeG<Lt>(par.nPart,G,gs.sym);
+    auto b=FockBasisFixedChargeG<Lt>(par.nPart,G,gs.sym,hasSz) ; //FockBasisFixedChargeG<Lt>(par.nPart,G,gs.sym);
 
 
 //    for(int i=0;i<Lt;i++)

@@ -79,7 +79,7 @@ EigenState FindGS(QOperator ham,FockBasisFixedChargeG<L>& b,
     if (b.Size()>10)
         eigs_sym(eval,evec,H ,std::min(b.Size()-2,101),"sa");
     else
-        eig_sym(eval,evec,H);
+        eig_sym(eval,evec,mat(H));
     uvec ind = sort_index(eval);
 //    for(uint i=0;i<eval.size();i++)
 //        if (eval(i)-eval(ind(0))<1e-10)
@@ -90,7 +90,7 @@ EigenState FindGS(QOperator ham,FockBasisFixedChargeG<L>& b,
         const auto x=eval(ind(i));
         if (x-unique_eval.back()>1e-10)
             unique_eval.push_back(x);
-        if (unique_eval.size()>2) break; // only print the first 2 different evals
+        if (unique_eval.size()>10) break; // only print the first 10 different evals
         cout<<x<<"\n";
     }
     cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
@@ -131,7 +131,7 @@ EigenStateG<cmpx> FindGS(QOperatorG<cmpx> ham,FockBasisFixedChargeG<L>& b,
         const auto x=eval(ind(i));
         if (x-unique_eval.back()>1e-10)
             unique_eval.push_back(x);
-        if (unique_eval.size()>2) break; // only print the first 2 different evals
+        if (unique_eval.size()>10) break; // only print the first 10 different evals
         cout<<x<<"\n";
     }
     cout<<"dim="<<b.Size()<<" nPart="<<nPart<<" sym="<<b.sym<<" ener="<<eval(ind(0))<<endl;
