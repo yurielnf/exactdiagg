@@ -84,7 +84,9 @@ void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
     cout<<setprecision(15);
 
 //    auto G=hnn.SymTraslation<Lt>();
-    auto G=hnn.SymReflectionOnSite<Lt>();
+    auto Gr=hnn.SymReflectionOnSite<Lt>();
+    auto Gsp=hnn.SymSpinFlip<Lt>();
+    auto G= Sz==0 ? Gr.DirectProd(Gsp) : Gr;
     EigenStateG<double> gs;
 
 //    out<<setprecision(15)<<" ang_spin*Lt/nq "<<ang_spin*Lt/nq<<"\n";

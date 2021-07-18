@@ -159,6 +159,13 @@ public:
         return Z2_Group<Lt>(Refl);
     }
 
+    template<int Lt>
+    static SymmetryGroup<Lt,double> SymSpinFlip()
+    {
+        auto T1=TranslationOp<Lt>(Lt/2);
+        return Z2_Group<Lt>(T1);
+    }
+
 };
 
 #endif // CADENITAAA5OPEN_H
