@@ -158,16 +158,24 @@ public:
     static int ReflectionOpY(FockState<L>& f)
     {
         std::string s=f.to_string();
-        std::reverse(s.begin(), s.end());
-        f=FockState<L>(s);
-        if ( (f.count()/2) & 1) return -1;
-        else return 1;
+        auto s1=s.substr(0,4);
+        auto s2=s.substr(4);
+
+        auto f1=FockState<4>(s1);
+        int sg1=ReflectionOp<4>(f1);
+
+        static auto Refl=TensorPow<nOrb,(L-4)/nOrb,ElementaryOp<nOrb>> ( ReflectionOpX<nOrb> );
+        auto f2=FockState<L-4>(s2);
+        int sg2=Refl(f2);
+
+        f=FockState<L>(f1.to_string()+f2.to_string());
+        return sg1*sg2;
     }
 
     template<int Lt>
     static SymmetryGroup<Lt,double> SymReflectionY()
     {
-        auto Refl=TensorPow<nOrb,Lt/nOrb,ElementaryOp<nOrb>> ( ReflectionOpX<nOrb> );
+        auto Refl=TensorPow<Lt/2,2,ElementaryOp<Lt/2>> ( ReflectionOpY<Lt/2> );
         return Z2_Group<Lt>(Refl);
     }
 
