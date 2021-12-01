@@ -160,6 +160,13 @@ public:
     }
 
     template<int Lt>
+    static SymmetryGroup<Lt,double> SymReflection()
+    {
+        auto Refl=TensorPow<Lt/2,2,ElementaryOp<Lt/2>> ( ReflectionOp<Lt/2> );
+        return Z2_Group<Lt>(Refl);
+    }
+
+    template<int Lt>
     static SymmetryGroup<Lt,double> SymSpinFlip()
     {
         auto T1=TranslationOp<Lt>(Lt/2);
