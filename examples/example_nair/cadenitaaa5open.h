@@ -42,41 +42,41 @@ public:
                 Umat(toInt(0,s),toInt(1,sp))=c;
                 Umat(toInt(3,s),toInt(4,sp))=c;
             }
-//        double q=angle_spin;
-//        std::vector<double> dat={cos(q/2),sin(q/2),-sin(q/2),cos(q/2)}; // col major
-//        mat rot(dat.data(),2,2);
-//        hop1=kron(hop1,rot);
-//        for(int i=0;i<nOrb;i++)
-//            for(int j=0;j<nOrb;j++)
-//                for(int s:{0,1})
-//                    for(int sp:{0,1})
-//                        hop(toInt(i,s),toInt(j,sp))=hop1(i,j)*rot(s,sp);
+        // now for the first 4 orbitals
+
     }
 //    int toInt(int i, int Ii, int spin) const { return spin+Ii*2+i*nOrb*2; }
 //    int toInt(int Ii, int spin) const { return spin+Ii*2; }
 
 //    int toInt(int i, int Ii, int spin) const { return i+Ii*L+spin*L*nOrb; }
-    int toInt(int i, int Ii, int spin) const { return Ii+i*nOrb+spin*nOrb*L; }
+    int toInt(int i, int Ii, int spin) const {
+
+        if (i>=0)
+            return 4+Ii+i*nOrb+spin*(4+nOrb*L);
+        else
+            return Ii<2 ? Ii+spin*(4+nOrb*L)
+                        : Ii-1+spin*(4+nOrb*L);
+
+    }
     int toInt(int Ii, int spin) const { return Ii+spin*nOrb; }
 
     QOperatorG<double> Kin() const
     {
         QOperatorG<double> h;
-        for(int i=0;i<L-1+periodic; i++)
+        for(int i=-1;i<L-1; i++)
             for(int ii=0;ii<nOrb;ii++)
                 for(int jj=0;jj<nOrb;jj++)
                 {
-
+                    if (i==-1 && (ii==2 || jj==2)) continue;
                     for(int s=0;s<2;s++)
                         for(int sp=0;sp<2;sp++)
                         {
 //                            double tt=hop(toInt(ii,s), toInt(jj,sp));
                             double tt=hop(ii, jj);
-                            if (periodic && phi && i==L-1) tt=-tt;
                             if (tt!=0)
                             {
                                 int pi=toInt(i,ii,s);
-                                int pj=toInt((i+1)%L,jj,sp);
+                                int pj=toInt(i+1,jj,sp);
                                 h.Add( FermiOp(pi,true)*FermiOp(pj,false), tt ); //tt*exp( cmpx{0,phi})
                                 h.Add( FermiOp(pj,true)*FermiOp(pi,false), tt ); //tt*exp(-cmpx{0,phi})
                             }
@@ -95,12 +95,13 @@ public:
     QOperatorG<double> Pot() const
     {
         QOperatorG<double> h;
-        for(int i=0;i<L; i++)
+        for(int i=-1;i<L; i++)
             for(int ii=0;ii<nOrb;ii++)
                 for(int s=0;s<2;s++)
                     for(int jj=0;jj<nOrb;jj++)
                         for(int sp=0;sp<2;sp++)
                         {
+                            if (i==-1 && (ii==2 || jj==2)) continue;
                             int pi=toInt(i,ii,s);
                             int pj=toInt(i,jj,sp);
                             double coeff=Umat(toInt(ii,s),toInt(jj,sp));
@@ -110,7 +111,7 @@ public:
                         }
         if (J!=0)
             for(int d=0;d<=3;d+=3)
-                for(int i=0;i<L; i++)
+                for(int i=-1;i<L; i++)
                     for(int ii=0;ii<2;ii++)
                     {
                         int pi=toInt(i,d+ii,0);
@@ -135,34 +136,55 @@ public:
     {
         return [=](const FockState<Lt>& f) {
             int sum=0;
-            for(int i=0;i<L;i++)
+            for(int i=-1;i<L;i++)
                 for(int ii=0;ii<nOrb;ii++)
-                    sum+=f.test(toInt(i,ii,0))-
-                         f.test(toInt(i,ii,1));
+                    if (i!=-1 || ii!=2)
+                        sum+=f.test(toInt(i,ii,0))-
+                                f.test(toInt(i,ii,1));
             return sum==Sz;
         };
     }
 
-    template<int Lt>
+    /*template<int Lt>
     static SymmetryGroup<Lt,cmpx> SymTraslation()
     {
         const int L=Lt/(2*nOrb);
         auto T1=TranslationOp<Lt/2>(nOrb);
         auto T=TensorPow<Lt/2,2> ( T1 );
         return CyclicGroupPow<Lt>(T, L);
+    }*/
+
+    template<int L>
+    static int ReflectionOpY(FockState<L>& f)
+    {
+        std::string s=f.to_string();
+        std::reverse(s.begin(), s.end());
+        f=FockState<L>(s);
+        if ( (f.count()/2) & 1) return -1;
+        else return 1;
     }
 
     template<int Lt>
-    static SymmetryGroup<Lt,double> SymReflectionOnSite()
+    static SymmetryGroup<Lt,double> SymReflectionY()
     {
-        auto Refl=TensorPow<nOrb,Lt/nOrb,ElementaryOp<nOrb>> ( ReflectionOp<nOrb> );
+        auto Refl=TensorPow<nOrb,Lt/nOrb,ElementaryOp<nOrb>> ( ReflectionOpX<nOrb> );
         return Z2_Group<Lt>(Refl);
     }
 
-    template<int Lt>
-    static SymmetryGroup<Lt,double> SymReflection()
+    template<int L>
+    static int ReflectionOpX(FockState<L>& f)
     {
-        auto Refl=TensorPow<Lt/2,2,ElementaryOp<Lt/2>> ( ReflectionOp<Lt/2> );
+        std::string s=f.to_string();
+        std::reverse(s.begin(), s.end());
+        f=FockState<L>(s);
+        if ( (f.count()/2) & 1) return -1;
+        else return 1;
+    }
+
+    template<int Lt>
+    static SymmetryGroup<Lt,double> SymReflectionX()
+    {
+        auto Refl=TensorPow<Lt/2,2,ElementaryOp<Lt/2>> ( ReflectionOpX<Lt/2> );
         return Z2_Group<Lt>(Refl);
     }
 
