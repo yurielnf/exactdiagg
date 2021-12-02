@@ -24,8 +24,8 @@ public:
     {}
     void Initialize()
     {
-        delta(1,2)=delta(2,3)=delta(2,1)=delta(3,2) = t;
-        delta(0,2)=delta(2,4)=delta(2,0)=delta(4,2) = tp;
+        delta(1,2)=delta(2,3)=delta(2,1)=delta(3,2) = tp;
+        delta(0,2)=delta(2,4)=delta(2,0)=delta(4,2) = t;
         delta(2,2)=-muCu;
         for(int i=0;i<nOrb;i++) delta(i,i)-=mu;
         hop(0,2)=hop(4,2) = t;
@@ -81,6 +81,13 @@ public:
                                 h.Add( FermiOp(pj,true)*FermiOp(pi,false), tt ); //tt*exp(-cmpx{0,phi})
                             }
                         }
+                }
+
+        for(int i=-1;i<L; i++)
+            for(int ii=0;ii<nOrb;ii++)
+                for(int jj=0;jj<nOrb;jj++)
+                {
+                    if (i==-1 && (ii==2 || jj==2)) continue;
                     double ee=delta(ii,jj);
                     if (ee!=0)
                         for(int s=0;s<2;s++)
@@ -129,7 +136,7 @@ public:
                     }
         return h;
     }
-    QOperatorG<double> Ham() const { return Kin()+Pot(); }
+    QOperatorG<double> Ham() const { return Kin()/*+Pot()*/; }
 
     template<int Lt>
     std::function<bool(FockState<Lt>)> HasSz(int Sz) const
@@ -155,8 +162,9 @@ public:
     }*/
 
     template<int L>
-    static int ReflectionOpY(FockState<L>& f)
+    int ReflectionOpY(FockState<L>& f) const
     {
+        const int nCell=(L-4)/nOrb;
         std::string s=f.to_string();
         auto s1=s.substr(0,4);
         auto s2=s.substr(4);
@@ -164,35 +172,68 @@ public:
         auto f1=FockState<4>(s1);
         int sg1=ReflectionOp<4>(f1);
 
-        static auto Refl=TensorPow<nOrb,(L-4)/nOrb,ElementaryOp<nOrb>> ( ReflectionOpX<nOrb> );
+        static auto Refl=TensorPow<nOrb,nCell,ElementaryOp<nOrb>> ( ReflectionOp<nOrb> );
         auto f2=FockState<L-4>(s2);
         int sg2=Refl(f2);
+
+
+        int sg3=1;
+        {// sign of the Cu dxy reflexion
+            std::array<std::vector<int>,3> pos;
+            for(int i=-1;i<nCell;i++)
+                for(int ii=0;ii<nOrb;ii++) {
+                    if (i==-1 && ii==2) continue;
+                    int id=toInt(i,ii,0);
+                    if(ii<2) pos[0].push_back(id);
+                    else if (ii==2) pos[1].push_back(id);
+                    else pos[2].push_back(id);
+                }
+            for(auto id:pos[1]) if (f.test(id)) sg3-=sg3;
+        }
 
         f=FockState<L>(f1.to_string()+f2.to_string());
         return sg1*sg2;
     }
 
     template<int Lt>
-    static SymmetryGroup<Lt,double> SymReflectionY()
+    SymmetryGroup<Lt,double> SymReflectionY() const
     {
-        auto Refl=TensorPow<Lt/2,2,ElementaryOp<Lt/2>> ( ReflectionOpY<Lt/2> );
+        auto Rop=[=](FockState<Lt/2>& f){return ReflectionOpY<Lt/2>(f);};
+        auto Refl=TensorPow<Lt/2,2,ElementaryOp<Lt/2>> ( Rop );
         return Z2_Group<Lt>(Refl);
     }
 
     template<int L>
-    static int ReflectionOpX(FockState<L>& f)
+    int ReflectionOpX(FockState<L>& f)
     {
+        const int nCell=(L-4)/nOrb;
         std::string s=f.to_string();
-        std::reverse(s.begin(), s.end());
+        std::array<std::vector<int>,3> pos;
+        for(int i=-1;i<nCell;i++)
+            for(int ii=0;ii<nOrb;ii++) {
+                if (i==-1 && ii==2) continue;
+                int id=toInt(i,ii,0);
+                if(ii<2) pos[0].push_back(id);
+                else if (ii==2) pos[1].push_back(id);
+                else pos[2].push_back(id);
+            }
+
+        for(auto const& p:pos) {
+            std::string si;
+            for(auto id:p) si+=s[id];
+            std::reverse(si.begin(),si.end());
+            for(uint i=0; i<si.size();i++) s[p[i]]=si[i];
+        }
+
         f=FockState<L>(s);
-        if ( (f.count()/2) & 1) return -1;
-        else return 1;
+        return 1;
     }
 
     template<int Lt>
-    static SymmetryGroup<Lt,double> SymReflectionX()
+    SymmetryGroup<Lt,double> SymReflectionX()
     {
-        auto Refl=TensorPow<Lt/2,2,ElementaryOp<Lt/2>> ( ReflectionOpX<Lt/2> );
+        auto Rop=[=](FockState<Lt/2>& f){return ReflectionOpX<Lt/2>(f);};
+        auto Refl=TensorPow<Lt/2,2,ElementaryOp<Lt/2>> ( Rop );
         return Z2_Group<Lt>(Refl);
     }
 

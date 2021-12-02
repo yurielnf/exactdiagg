@@ -30,27 +30,11 @@ using namespace std;
 void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
 {
     ofstream out(string("energ.txt"));
-    const int Lt=4*10;  //  Lt = nq*L
-    const int nq=10; //number of qubits per unit cell
-
-
-//    auto T=TranslationOp<Lt>(nq);  //este traslada en la celda completa. no cambiar.
-//    auto Gt=CyclicGroupPow<Lt>(T, Lt/nq);
-//    auto G=Gt;
-
-//    const int L=Lt/nq;
-//    auto Refl=TensorPow<nq,L,ElementaryOp<nq>> ( ReflectionOp<nq> );
-//    auto G = Z2_Group<Lt,cmpx>(Refl);
-
-
-
-//    auto T1=TranslationOp<Lt/nq>(1);
-//    auto T=TensorPow<Lt/nq,nq> ( T1 );
-//    auto Gt=CyclicGroupPow<Lt>(T, Lt/nq);
-//    auto G = Gt;
+    const int L=1; //number of cells
+    const int Lt=L*10+8;  //  number of qubits
 
     bool Phi=par.phi;
-    CadenitaAA5Open hnn(Lt/nq);
+    CadenitaAA5Open hnn(L);
     {
         out << "Parameters\n";
         hnn.periodic=par.periodic;
@@ -70,9 +54,9 @@ void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
         hnn.U3=par.U3;
         out << " U3="<<hnn.U3;
         if ( Phi )
-            hnn.phi=M_PI*nq/Lt; // <------ chequear con cuidado!!!
+            hnn.phi=M_PI/L; // <------ chequear con cuidado!!!
         else hnn.phi=0;
-        out << "\nphi="<<hnn.phi*Lt/nq;
+        out << "\nphi="<<hnn.phi*L;
     }
 
     hnn.Initialize();
@@ -86,7 +70,7 @@ void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
 //    auto G=hnn.SymTraslation<Lt>();
     auto Gr=hnn.SymReflectionY<Lt>();
     auto Gsp=hnn.SymSpinFlip<Lt>();
-    auto G= Sz==0 ? Gr.DirectProd(Gsp) : Gr;
+    auto G= Gr;  //Sz==0 ? Gr.DirectProd(Gsp) : Gr;
     EigenStateG<double> gs;
 
 //    out<<setprecision(15)<<" ang_spin*Lt/nq "<<ang_spin*Lt/nq<<"\n";
@@ -102,6 +86,20 @@ void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
         out<< "nu "<< nu << " ";
         out<<setprecision(9)<<gsn.ener << "\n";
         gs=std::min( gs, gsn );
+
+        auto H=hnn.Ham().toMatrix<Lt>(b,G);
+        H.print("H=");
+        {
+            auto f=b.vec[2];
+            cout<<f<<endl;
+            auto s=hnn.Ham().template ApplyTo<Lt,double>(f);
+            for(auto f:s) cout<<f.first<<" "<<f.second<<endl;
+            cout<<"\nReflexion\n";
+            auto Rop=[=](FockState<Lt/2>& f){return hnn.ReflectionOpY<Lt/2>(f);};
+            auto Refl=TensorPow<Lt/2,2,ElementaryOp<Lt/2>> ( Rop );
+            Refl(f);
+            cout<<f<<endl;
+        }
     }
     out<<"\n";
     //if ((id+1)%nTwist==0) out<<"\n\n";
