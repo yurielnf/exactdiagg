@@ -166,6 +166,7 @@ public:
     {
         const int nCell=(L-4)/nOrb;
         std::string s=f.to_string();
+        std::reverse(s.begin(),s.end()); //string is indexed in reverse
         auto s1=s.substr(0,4);
         auto s2=s.substr(4);
 
@@ -190,8 +191,9 @@ public:
                 }
             for(auto id:pos[1]) if (f.test(id)) sg3-=sg3;
         }
-
-        f=FockState<L>(f1.to_string()+f2.to_string());
+        s=f1.to_string()+f2.to_string();
+        std::reverse(s.begin(),s.end()); //reverse back
+        f=FockState<L>(s);
         return sg1*sg2;
     }
 
@@ -208,6 +210,7 @@ public:
     {
         const int nCell=(L-4)/nOrb;
         std::string s=f.to_string();
+        std::reverse(s.begin(),s.end()); //string is indexed in reverse
         std::array<std::vector<int>,3> pos;
         for(int i=-1;i<nCell;i++)
             for(int ii=0;ii<nOrb;ii++) {
@@ -224,7 +227,7 @@ public:
             std::reverse(si.begin(),si.end());
             for(uint i=0; i<si.size();i++) s[p[i]]=si[i];
         }
-
+        std::reverse(s.begin(),s.end()); //reverse back
         f=FockState<L>(s);
         return 1;
     }
