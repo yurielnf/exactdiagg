@@ -68,9 +68,10 @@ void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
     cout<<setprecision(15);
 
 //    auto G=hnn.SymTraslation<Lt>();
-    auto Gr=hnn.SymReflectionY<Lt>();
+    auto Gx=hnn.SymReflectionX<Lt>();
+    auto Gy=hnn.SymReflectionY<Lt>();
     auto Gsp=hnn.SymSpinFlip<Lt>();
-    auto G= Gr;  //Sz==0 ? Gr.DirectProd(Gsp) : Gr;
+    auto G= Gx;  //Sz==0 ? Gr.DirectProd(Gsp) : Gr;
     EigenStateG<double> gs;
 
 //    out<<setprecision(15)<<" ang_spin*Lt/nq "<<ang_spin*Lt/nq<<"\n";
@@ -87,19 +88,19 @@ void TestGS_CadenitaAA5(const Parameters& par)//,int nTwist,int id, int id_last)
         out<<setprecision(9)<<gsn.ener << "\n";
         gs=std::min( gs, gsn );
 
-        auto H=hnn.Ham().toMatrix<Lt>(b,G);
-        H.print("H=");
-        {
+//        auto H=hnn.Ham().toMatrix<Lt>(b,G);
+//        H.print("H=");
+//        {
             auto f=b.vec[2];
             cout<<f<<endl;
-            auto s=hnn.Ham().template ApplyTo<Lt,double>(f);
-            for(auto f:s) cout<<f.first<<" "<<f.second<<endl;
+//            auto s=hnn.Ham().template ApplyTo<Lt,double>(f);
+//            for(auto f:s) cout<<f.first<<" "<<f.second<<endl;
             cout<<"\nReflexion\n";
-            auto Rop=[=](FockState<Lt/2>& f){return hnn.ReflectionOpY<Lt/2>(f);};
+            auto Rop=[=](FockState<Lt/2>& f){return hnn.ReflectionOpX<Lt/2>(f);};
             auto Refl=TensorPow<Lt/2,2,ElementaryOp<Lt/2>> ( Rop );
             Refl(f);
             cout<<f<<endl;
-        }
+//        }
     }
     out<<"\n";
     //if ((id+1)%nTwist==0) out<<"\n\n";

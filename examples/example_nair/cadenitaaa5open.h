@@ -24,8 +24,8 @@ public:
     {}
     void Initialize()
     {
-        delta(1,2)=delta(2,3)=delta(2,1)=delta(3,2) = tp;
-        delta(0,2)=delta(2,4)=delta(2,0)=delta(4,2) = t;
+        delta(1,2)=delta(2,3)=delta(2,1)=delta(3,2) = t;
+        delta(0,2)=delta(2,4)=delta(2,0)=delta(4,2) = tp;
         delta(2,2)=-muCu;
         for(int i=0;i<nOrb;i++) delta(i,i)-=mu;
         hop(0,2)=hop(4,2) = t;
@@ -206,7 +206,7 @@ public:
     }
 
     template<int L>
-    int ReflectionOpX(FockState<L>& f)
+    int ReflectionOpX(FockState<L>& f) const
     {
         const int nCell=(L-4)/nOrb;
         std::string s=f.to_string();
@@ -222,18 +222,32 @@ public:
             }
 
         for(auto const& p:pos) {
-            std::string si;
-            for(auto id:p) si+=s[id];
+            std::string si(p.size(),0);
+            for(uint i=0; i<si.size();i++) si[i]=s[p[i]];
             std::reverse(si.begin(),si.end());
             for(uint i=0; i<si.size();i++) s[p[i]]=si[i];
         }
+        int sg3=1;
+        {// sign of the Cu dxy reflexion
+            std::array<std::vector<int>,3> pos;
+            for(int i=-1;i<nCell;i++)
+                for(int ii=0;ii<nOrb;ii++) {
+                    if (i==-1 && ii==2) continue;
+                    int id=toInt(i,ii,0);
+                    if(ii<2) pos[0].push_back(id);
+                    else if (ii==2) pos[1].push_back(id);
+                    else pos[2].push_back(id);
+                }
+            for(auto id:pos[1]) if (f.test(id)) sg3-=sg3;
+        }
+
         std::reverse(s.begin(),s.end()); //reverse back
         f=FockState<L>(s);
-        return 1;
+        return sg3;
     }
 
     template<int Lt>
-    SymmetryGroup<Lt,double> SymReflectionX()
+    SymmetryGroup<Lt,double> SymReflectionX() const
     {
         auto Rop=[=](FockState<Lt/2>& f){return ReflectionOpX<Lt/2>(f);};
         auto Refl=TensorPow<Lt/2,2,ElementaryOp<Lt/2>> ( Rop );
