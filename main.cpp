@@ -52,6 +52,12 @@ int main(int argc,const char *argv[])
         Parameters param(argv[1]);
         TestGS_CadenitaAA5(param);
     }
+    else if (argc==3 && string(argv[1])=="2qd")
+    {
+        vector<double> Us={0,1,2,3,4,5,6,7,8,9,10};
+        for(double U:Us)
+            Test2Qd(U);
+    }
 
     return 0;
 }
