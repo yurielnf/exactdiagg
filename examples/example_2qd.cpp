@@ -7,11 +7,11 @@
 using namespace std;
 
 template<int L>
-struct DoubleQD
+struct IRLM
 {
     double U, t=25, gamma=5, tp=0.5;
 
-    DoubleQD(double U) : U(U) {}
+    IRLM(double U) : U(U) {}
     int toId(int i,int s) const  { return i+s*L ; }
     FermiOp Create(int i,int s) const {return FermiOp(toId(i,s),true);}
     FermiOp Destroy(int i,int s) const {return FermiOp(toId(i,s),false);}
@@ -67,7 +67,7 @@ void Test2Qd(double U)
     const int L=Lt/4;
     int nPart=2*L;
 
-    auto sys=DoubleQD<L>(U);
+    auto sys=IRLM<L>(U);
     auto H=sys.Ham();
     auto G=sys.Sym4Channel();
 

@@ -16,6 +16,7 @@ set(SOURCES
     examples/example_hubbard.cpp
     examples/example_hubbard2.cpp
     examples/example_2qd.cpp
+    examples/example_irlm.cpp
 )
 
 set(HEADERS
