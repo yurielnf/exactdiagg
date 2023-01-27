@@ -58,6 +58,10 @@ int main(int argc,const char *argv[])
         for(double U:Us)
             Test2Qd(U);
     }
+    else if (argc==5 && string(argv[1])=="irlm")
+    {
+        TestIRLM(argv[2], argv[3], atof(argv[4]));
+    }
 
     return 0;
 }

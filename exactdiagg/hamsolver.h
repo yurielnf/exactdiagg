@@ -195,8 +195,9 @@ EigenState FindGS(QOperator ham,FockBasisFixedCharge<L>& b,int nPart)
 
     vec eval;
     mat evec;
-    if(b.Size()>10)
-        eigs_sym(eval,evec,H ,std::min(b.Size()-2,101),"sa");
+    if(b.Size()>10) {
+        eigs_sym(eval,evec,H ,std::min(b.Size()-2,21),"sa");
+    }
     else
         eig_sym(eval,evec,mat(H));
     uvec ind = sort_index(eval);

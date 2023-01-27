@@ -15,4 +15,6 @@ void TestGS_CadenitaAA3(const Parameters& par);
 void TestGS_CadenitaAA5(const Parameters& par);
 
 void Test2Qd(double U);
+void TestIRLM(const char fileT[], const char fileU[], double U);
+
 #endif // TOROU_H
